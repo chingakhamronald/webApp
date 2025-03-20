@@ -1,4 +1,4 @@
-import { FC, memo } from "react";
+import { FC, memo, useState } from "react";
 import {
   FormControl,
   FormField,
@@ -16,26 +16,48 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { Eye, EyeOff } from "lucide-react";
+import { Button } from "./ui/button";
 
 interface ICustomFormField<T extends FieldValues> {
   formControl: Control<T>;
   label: string;
   type?: string;
-  value: Path<T>;
+  name: Path<T>;
   placeholder?: string;
+  options?: any;
+  disable?: boolean;
+  onChange?: any;
 }
 
 export const CustomFormField: FC<ICustomFormField<any>> = memo(
-  ({ formControl, label, value, type = "string", placeholder }) => {
+  ({
+    formControl,
+    label,
+    name,
+    type = "string",
+    placeholder,
+    disable = false,
+    onChange,
+    options,
+  }) => {
+    const [showPassword, setShowPassword] = useState(false);
+
     return (
       <FormField
         control={formControl}
-        name={value}
+        name={name}
         render={({ field }) => (
           <FormItem className="py-2 w-full">
             <FormLabel>{label}</FormLabel>
             {type === "select" ? (
-              <Select>
+              <Select
+                onValueChange={(e) => {
+                  field.onChange(e);
+                  onChange?.(e);
+                }}
+                disabled={disable}
+              >
                 <FormControl>
                   <SelectTrigger className="w-full">
                     <SelectValue />
@@ -43,18 +65,35 @@ export const CustomFormField: FC<ICustomFormField<any>> = memo(
                 </FormControl>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                    {options?.map((option: any, idx: number) => (
+                      <SelectItem value={option.value} key={idx}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
             ) : (
-              <FormControl>
-                <Input placeholder={placeholder} {...field} type={type} />
-              </FormControl>
+              <div className="relative">
+                <FormControl>
+                  <Input
+                    placeholder={placeholder}
+                    {...field}
+                    type={
+                      type === "password" && !showPassword ? "password" : "text"
+                    }
+                  />
+                </FormControl>
+                {type === "password" && (
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                )}
+              </div>
             )}
             <FormMessage />
           </FormItem>

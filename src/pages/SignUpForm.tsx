@@ -21,17 +21,45 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Eform } from "@/types/type";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useState } from "react";
 import { CustomFormField } from "@/components/CustomFormField";
 import { FormSchema } from "@/schema/FormSchema";
+import {
+  cityOptions,
+  countryCodeOptions,
+  countryOptions,
+  stateOptions,
+} from "@/data";
 
 export function SignUpForm() {
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [selectedState, setSelectedState] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      type: Eform.enterprise,
+      firstName: "",
+      lastName: "",
+      email: "",
+      address: "",
+      country: "",
+      state: "",
+      city: "",
+      pincode: "",
+      countryCode: "",
+      mobile: "",
+      fax: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast("You submitted the following values:", {
+    console.log({ "data...": data });
+
+    toast("You submitted the following names:", {
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
@@ -65,7 +93,7 @@ export function SignUpForm() {
                     <FormLabel>
                       {capitalize(Eform.enterprise)}/
                       {capitalize(Eform.government)}/
-                      {capitalize(Eform.indivisual)}
+                      {capitalize(Eform.indivisual)} *
                     </FormLabel>
                     <FormControl>
                       <RadioButton field={field} />
@@ -79,30 +107,30 @@ export function SignUpForm() {
                 {/* First Name */}
                 <CustomFormField
                   formControl={form.control}
-                  label="First Name"
-                  value="firstName"
+                  label="First Name *"
+                  name="firstName"
                 />
 
                 {/* Last Name */}
                 <CustomFormField
                   formControl={form.control}
-                  label="Last Name"
-                  value="firstName"
+                  label="Last Name *"
+                  name="firstName"
                 />
               </div>
 
               {/* Email */}
               <CustomFormField
                 formControl={form.control}
-                label="Email"
-                value="email"
+                label="Email *"
+                name="email"
               />
 
               {/* Address */}
               <CustomFormField
                 formControl={form.control}
-                label=" Address"
-                value="address"
+                label=" Address *"
+                name="address"
               />
 
               <div className="flex items-center justify-between gap-2 ">
@@ -110,16 +138,30 @@ export function SignUpForm() {
                 <CustomFormField
                   type="select"
                   formControl={form.control}
-                  label="Country"
-                  value="country"
+                  label="Country *"
+                  name="country"
+                  options={countryOptions}
+                  onChange={(value: any) => {
+                    setSelectedCountry(value);
+                    setSelectedState(null);
+                    form.setValue("state", ""), form.setValue("city", "");
+                  }}
                 />
 
                 {/* State */}
                 <CustomFormField
                   type="select"
                   formControl={form.control}
-                  label="State"
-                  value="state"
+                  label="State *"
+                  name="state"
+                  options={
+                    selectedCountry ? stateOptions[selectedCountry] ?? [] : []
+                  }
+                  disable={!selectedCountry}
+                  onChange={(value: any) => {
+                    setSelectedState(value);
+                    form.setValue("city", "");
+                  }}
                 />
               </div>
 
@@ -127,16 +169,20 @@ export function SignUpForm() {
                 {/* City */}
                 <CustomFormField
                   formControl={form.control}
-                  label="City"
-                  value="city"
+                  label="City *"
+                  name="city"
                   type="select"
+                  disable={!selectedState}
+                  options={
+                    selectedState ? cityOptions[selectedState] ?? [] : []
+                  }
                 />
 
                 {/* Pincode */}
                 <CustomFormField
                   formControl={form.control}
-                  label="Pincode"
-                  value="pincode"
+                  label="Pincode *"
+                  name="pincode"
                 />
               </div>
 
@@ -144,16 +190,17 @@ export function SignUpForm() {
                 {/* country code */}
                 <CustomFormField
                   formControl={form.control}
-                  label="ISD Code"
-                  value="countryCode"
+                  label="ISD Code *"
+                  name="countryCode"
                   type="select"
+                  options={countryCodeOptions}
                 />
 
                 {/* Mobile */}
                 <CustomFormField
                   formControl={form.control}
-                  label="Mobile"
-                  value="mobile"
+                  label="Mobile *"
+                  name="mobile"
                   type="number"
                 />
               </div>
@@ -163,30 +210,30 @@ export function SignUpForm() {
                 <CustomFormField
                   formControl={form.control}
                   label="Fax"
-                  value="fax"
+                  name="fax"
                 />
 
                 {/* Phone */}
                 <CustomFormField
                   formControl={form.control}
                   label="Phone"
-                  value="phone"
+                  name="phone"
                 />
               </div>
 
               {/* Password */}
               <CustomFormField
                 formControl={form.control}
-                label="Password"
-                value="password"
+                label="Password *"
+                name="password"
                 type="password"
               />
 
               {/* Confirm Password */}
               <CustomFormField
                 formControl={form.control}
-                label="Confirm Password"
-                value="confirmPassword"
+                label="Confirm Password *"
+                name="confirmPassword"
                 type="password"
               />
 
@@ -213,8 +260,8 @@ const RadioButton = memo((field: any) => {
 
   return (
     <RadioGroup
+      value={field.value}
       onValueChange={field.onChange}
-      defaultValue={field.value}
       className="flex flex-row py-0.5 justify-around w-full"
     >
       {data.map((e) => (
@@ -222,7 +269,7 @@ const RadioButton = memo((field: any) => {
           <FormControl>
             <RadioGroupItem value={e.value} />
           </FormControl>
-          <FormLabel className="font-normal">{e.title}</FormLabel>
+          <FormLabel>{e.title}</FormLabel>
         </FormItem>
       ))}
     </RadioGroup>

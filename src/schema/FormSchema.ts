@@ -1,8 +1,9 @@
+import { Eform } from "@/types/type";
 import { z } from "zod";
 
 export const FormSchema = z
   .object({
-    type: z.enum(["all", "mentions", "none"], {
+    type: z.enum([Eform.enterprise, Eform.government, Eform.indivisual], {
       required_error: "You need to select a notification type.",
     }),
 
@@ -53,12 +54,10 @@ export const FormSchema = z
       .string()
       .regex(/^\d{4,10}$/, { message: "Invalid pincode format" }),
 
-    countryCode: z
-      .string({
-        required_error: "Country code is required",
-        invalid_type_error: "Country code must be a string",
-      })
-      .regex(/^\d{1,4}$/, { message: "Invalid country code" }),
+    countryCode: z.string({
+      required_error: "Country code is required",
+      invalid_type_error: "Country code must be a string",
+    }),
 
     mobile: z
       .string({
