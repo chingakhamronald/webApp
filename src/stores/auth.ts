@@ -7,7 +7,7 @@ interface IStore {
   removeProfileData: () => void;
 }
 
-export const useStore = create<IStore>()(
+export const useAuthStore = create<IStore>()(
   persist(
     (set) => ({
       profileData: null,

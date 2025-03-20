@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -7,9 +7,17 @@ import {
 import { CircleUserRound, Search, ShoppingCart } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { useStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
 
 const Navbar = () => {
   const { count } = useStore((state) => state);
+  const logout = useAuthStore((state) => state.removeProfileData);
+  const navigate = useNavigate();
+
+  const handleClickLogout = () => {
+    logout();
+    navigate("/");
+  };
   return (
     <nav className="bg-background items-center border-2">
       <div className="flex items-center justify-between p-4 w-[1280px] m-auto">
@@ -67,7 +75,7 @@ const Navbar = () => {
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <CircleUserRound size={25} />
+              <CircleUserRound size={25} onClick={handleClickLogout} />
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>

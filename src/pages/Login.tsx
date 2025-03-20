@@ -11,12 +11,13 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { LoginFormSchema } from "@/schema/FormSchema";
+import { useAuthStore } from "@/stores/auth";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { profileData } = useAuthStore((state) => state);
 
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
@@ -27,16 +28,22 @@ const Login = () => {
   });
 
   function onSubmit(data: z.infer<typeof LoginFormSchema>) {
-    toast("You submitted the following names:", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    console.log({ "PROFILE....": profileData, "DATA>>>": data });
 
-    if (data) {
+    if (
+      data.email === profileData?.email &&
+      data.password === profileData?.password
+    ) {
       navigate("/dashboard");
+    } else {
+      form.setError("email", {
+        type: "manual",
+        message: "Invalid email or password",
+      });
+      form.setError("password", {
+        type: "manual",
+        message: "Invalid email or password",
+      });
     }
   }
 
@@ -73,7 +80,7 @@ const Login = () => {
         </CardContent>
       </Card>
       <div className="text-balance text-center text-sm text-muted-foreground  mt-2 [&_a]:inherite  [&_a]:hover:text-primary">
-        If you don't have an account? <a href="/signup">Signup</a>
+        If you don't have an account? <a href="/">Signup</a>
       </div>
     </div>
   );

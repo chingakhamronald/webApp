@@ -31,10 +31,13 @@ import {
   stateOptions,
 } from "@/data";
 import { useNavigate } from "react-router";
+import { useAuthStore } from "@/stores/auth";
 
 export function SignUpForm() {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
+
+  const { addProfileData } = useAuthStore((state) => state);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -69,6 +72,7 @@ export function SignUpForm() {
     });
 
     if (data) {
+      addProfileData(data);
       navigate("/login");
     }
   }
