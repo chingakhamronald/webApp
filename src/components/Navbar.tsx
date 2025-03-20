@@ -5,20 +5,24 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { CircleUserRound, Search, ShoppingCart } from "lucide-react";
+import { Badge } from "./ui/badge";
 
 const Navbar = () => {
   return (
     <nav className="bg-background items-center border-2">
       <div className="container mx-auto flex items-center justify-between p-4">
-        <Link to="/" className="text-xl font-bold text-primary">
-          MyApp
+        <Link to="/dashboard" className="text-xl font-bold text-primary">
+          WEB-APP
         </Link>
 
         {/* Navigation Menu  Home | CLOTHINGS | ACCESSORIES*/}
         <NavigationMenu>
           <NavigationMenuList className="flex gap-8">
             <NavigationMenuItem>
-              <Link to="/" className="text-sm font-medium hover:text-primary">
+              <Link
+                to="/dashboard"
+                className="text-sm font-medium hover:text-primary"
+              >
                 HOME
               </Link>
             </NavigationMenuItem>
@@ -45,7 +49,7 @@ const Navbar = () => {
 
         {/* Navigation Menu  SEARCH | CARTS | PERSON*/}
         <NavigationMenu>
-          <NavigationMenuList className="flex gap-5">
+          <NavigationMenuList className="flex gap-8">
             <NavigationMenuItem>
               <Link to="/docs">
                 <Search size={25} />
@@ -53,7 +57,16 @@ const Navbar = () => {
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <Link to="/docs">
+              <Link
+                to="/docs"
+                className="relative flex items-center gap-2 text-sm font-medium hover:text-primary"
+              >
+                <Badge
+                  variant="default"
+                  className="absolute -top-3 -right-5 text-xs"
+                >
+                  3
+                </Badge>
                 <ShoppingCart size={25} />
               </Link>
             </NavigationMenuItem>
