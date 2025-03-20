@@ -174,18 +174,20 @@ export function SignUpForm() {
                 />
               </div>
 
-              {/* Confirm Password */}
-              <CustomFormField
-                formControl={form.control}
-                label="Confirm Password"
-                value="confirmPassword"
-              />
-
               {/* Password */}
               <CustomFormField
                 formControl={form.control}
                 label="Password"
                 value="password"
+                type="password"
+              />
+
+              {/* Confirm Password */}
+              <CustomFormField
+                formControl={form.control}
+                label="Confirm Password"
+                value="confirmPassword"
+                type="password"
               />
 
               <Button type="submit" className="w-full mt-2">
