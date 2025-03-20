@@ -30,6 +30,7 @@ import {
   countryOptions,
   stateOptions,
 } from "@/data";
+import { useNavigate } from "react-router";
 
 export function SignUpForm() {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
@@ -56,9 +57,9 @@ export function SignUpForm() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log({ "data...": data });
+  const navigate = useNavigate();
 
+  function onSubmit(data: z.infer<typeof FormSchema>) {
     toast("You submitted the following names:", {
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
@@ -66,6 +67,10 @@ export function SignUpForm() {
         </pre>
       ),
     });
+
+    if (data) {
+      navigate("/login");
+    }
   }
 
   const capitalize = useCallback(
@@ -74,178 +79,180 @@ export function SignUpForm() {
   );
 
   return (
-    <div className="flex flex-col items-center justify-center my-5">
-      <Card className="w-2xl">
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>
-            Please Signup your account at WebApp
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem className="py-2">
-                    <FormLabel>
-                      {capitalize(Eform.enterprise)}/
-                      {capitalize(Eform.government)}/
-                      {capitalize(Eform.indivisual)} *
-                    </FormLabel>
-                    <FormControl>
-                      <RadioButton field={field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex items-center justify-between gap-2 ">
-                {/* First Name */}
-                <CustomFormField
-                  formControl={form.control}
-                  label="First Name *"
-                  name="firstName"
+    <div className="w-full h-full my-5">
+      <div className="flex flex-col items-center justify-center">
+        <Card className="w-xl">
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl">Welcome back</CardTitle>
+            <CardDescription>
+              Please Signup your account at WebApp
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem className="py-2">
+                      <FormLabel>
+                        {capitalize(Eform.enterprise)}/
+                        {capitalize(Eform.government)}/
+                        {capitalize(Eform.indivisual)} *
+                      </FormLabel>
+                      <FormControl>
+                        <RadioButton field={field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
 
-                {/* Last Name */}
+                <div className="flex items-center justify-between gap-2 ">
+                  {/* First Name */}
+                  <CustomFormField
+                    formControl={form.control}
+                    label="First Name *"
+                    name="firstName"
+                  />
+
+                  {/* Last Name */}
+                  <CustomFormField
+                    formControl={form.control}
+                    label="Last Name *"
+                    name="lastName"
+                  />
+                </div>
+
+                {/* Email */}
                 <CustomFormField
                   formControl={form.control}
-                  label="Last Name *"
-                  name="firstName"
-                />
-              </div>
-
-              {/* Email */}
-              <CustomFormField
-                formControl={form.control}
-                label="Email *"
-                name="email"
-              />
-
-              {/* Address */}
-              <CustomFormField
-                formControl={form.control}
-                label=" Address *"
-                name="address"
-              />
-
-              <div className="flex items-center justify-between gap-2 ">
-                {/* Country */}
-                <CustomFormField
-                  type="select"
-                  formControl={form.control}
-                  label="Country *"
-                  name="country"
-                  options={countryOptions}
-                  onChange={(value: any) => {
-                    setSelectedCountry(value);
-                    setSelectedState(null);
-                    form.setValue("state", ""), form.setValue("city", "");
-                  }}
+                  label="Email *"
+                  name="email"
                 />
 
-                {/* State */}
-                <CustomFormField
-                  type="select"
-                  formControl={form.control}
-                  label="State *"
-                  name="state"
-                  options={
-                    selectedCountry ? stateOptions[selectedCountry] ?? [] : []
-                  }
-                  disable={!selectedCountry}
-                  onChange={(value: any) => {
-                    setSelectedState(value);
-                    form.setValue("city", "");
-                  }}
-                />
-              </div>
-
-              <div className="flex items-center justify-between gap-2 ">
-                {/* City */}
+                {/* Address */}
                 <CustomFormField
                   formControl={form.control}
-                  label="City *"
-                  name="city"
-                  type="select"
-                  disable={!selectedState}
-                  options={
-                    selectedState ? cityOptions[selectedState] ?? [] : []
-                  }
+                  label=" Address *"
+                  name="address"
                 />
 
-                {/* Pincode */}
+                <div className="flex items-center justify-between gap-2 ">
+                  {/* Country */}
+                  <CustomFormField
+                    type="select"
+                    formControl={form.control}
+                    label="Country *"
+                    name="country"
+                    options={countryOptions}
+                    onChange={(value: any) => {
+                      setSelectedCountry(value);
+                      setSelectedState(null);
+                      form.setValue("state", ""), form.setValue("city", "");
+                    }}
+                  />
+
+                  {/* State */}
+                  <CustomFormField
+                    type="select"
+                    formControl={form.control}
+                    label="State *"
+                    name="state"
+                    options={
+                      selectedCountry ? stateOptions[selectedCountry] ?? [] : []
+                    }
+                    disable={!selectedCountry}
+                    onChange={(value: any) => {
+                      setSelectedState(value);
+                      form.setValue("city", "");
+                    }}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between gap-2 ">
+                  {/* City */}
+                  <CustomFormField
+                    formControl={form.control}
+                    label="City *"
+                    name="city"
+                    type="select"
+                    disable={!selectedState}
+                    options={
+                      selectedState ? cityOptions[selectedState] ?? [] : []
+                    }
+                  />
+
+                  {/* Pincode */}
+                  <CustomFormField
+                    formControl={form.control}
+                    label="Pincode *"
+                    name="pincode"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between gap-2 ">
+                  {/* country code */}
+                  <CustomFormField
+                    formControl={form.control}
+                    label="ISD Code *"
+                    name="countryCode"
+                    type="select"
+                    options={countryCodeOptions}
+                  />
+
+                  {/* Mobile */}
+                  <CustomFormField
+                    formControl={form.control}
+                    label="Mobile *"
+                    name="mobile"
+                    type="number"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between gap-2 ">
+                  {/* Fax */}
+                  <CustomFormField
+                    formControl={form.control}
+                    label="Fax"
+                    name="fax"
+                  />
+
+                  {/* Phone */}
+                  <CustomFormField
+                    formControl={form.control}
+                    label="Phone"
+                    name="phone"
+                  />
+                </div>
+
+                {/* Password */}
                 <CustomFormField
                   formControl={form.control}
-                  label="Pincode *"
-                  name="pincode"
+                  label="Password *"
+                  name="password"
+                  type="password"
                 />
-              </div>
 
-              <div className="flex items-center justify-between gap-2 ">
-                {/* country code */}
+                {/* Confirm Password */}
                 <CustomFormField
                   formControl={form.control}
-                  label="ISD Code *"
-                  name="countryCode"
-                  type="select"
-                  options={countryCodeOptions}
+                  label="Confirm Password *"
+                  name="confirmPassword"
+                  type="password"
                 />
 
-                {/* Mobile */}
-                <CustomFormField
-                  formControl={form.control}
-                  label="Mobile *"
-                  name="mobile"
-                  type="number"
-                />
-              </div>
-
-              <div className="flex items-center justify-between gap-2 ">
-                {/* Fax */}
-                <CustomFormField
-                  formControl={form.control}
-                  label="Fax"
-                  name="fax"
-                />
-
-                {/* Phone */}
-                <CustomFormField
-                  formControl={form.control}
-                  label="Phone"
-                  name="phone"
-                />
-              </div>
-
-              {/* Password */}
-              <CustomFormField
-                formControl={form.control}
-                label="Password *"
-                name="password"
-                type="password"
-              />
-
-              {/* Confirm Password */}
-              <CustomFormField
-                formControl={form.control}
-                label="Confirm Password *"
-                name="confirmPassword"
-                type="password"
-              />
-
-              <Button type="submit" className="w-full mt-2">
-                Submit
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-      <div className="text-balance text-center text-sm text-muted-foreground  mt-2 [&_a]:inherite  [&_a]:hover:text-primary">
-        Already have an account? <a href="#">Login</a>
+                <Button type="submit" className="w-full mt-2">
+                  Submit
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+        <div className="text-balance text-center text-sm text-muted-foreground  mt-2 [&_a]:inherite  [&_a]:hover:text-primary">
+          Already have an account? <a href="#">Login</a>
+        </div>
       </div>
     </div>
   );

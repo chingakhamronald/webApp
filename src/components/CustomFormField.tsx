@@ -1,4 +1,4 @@
-import { FC, memo, useState } from "react";
+import { FC, memo, useCallback, useState } from "react";
 import {
   FormControl,
   FormField,
@@ -17,7 +17,6 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Eye, EyeOff } from "lucide-react";
-import { Button } from "./ui/button";
 
 interface ICustomFormField<T extends FieldValues> {
   formControl: Control<T>;
@@ -42,6 +41,10 @@ export const CustomFormField: FC<ICustomFormField<any>> = memo(
     options,
   }) => {
     const [showPassword, setShowPassword] = useState(false);
+
+    const handleClick = useCallback(() => {
+      setShowPassword((prev) => !prev);
+    }, [setShowPassword]);
 
     return (
       <FormField
@@ -88,7 +91,7 @@ export const CustomFormField: FC<ICustomFormField<any>> = memo(
                   <button
                     type="button"
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                    onClick={() => setShowPassword((prev) => !prev)}
+                    onClick={handleClick}
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>

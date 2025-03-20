@@ -89,3 +89,19 @@ export const FormSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const LoginFormSchema = z.object({
+  email: z
+    .string({
+      required_error: "Email is required",
+      invalid_type_error: "Email must be a string",
+    })
+    .email({ message: "Please enter a valid email" }),
+  password: z
+    .string({
+      required_error: "Password is required",
+      invalid_type_error: "Password must be a string",
+    })
+    .min(5, { message: "Password should be at least 5 characters" })
+    .max(15, { message: "Password should be at most 15 characters" }),
+});
