@@ -254,8 +254,8 @@ export function SignUpForm() {
             </Form>
           </CardContent>
         </Card>
-        <div className="text-balance text-center text-sm text-muted-foreground  mt-2 [&_a]:inherite  [&_a]:hover:text-primary">
-          Already have an account? <a href="#">Login</a>
+        <div className="text-balance  text-center text-sm text-muted-foreground  my-4 [&_a]:text-blue-500">
+          Already have an account? <a href="/login">Login</a>
         </div>
       </div>
     </div>

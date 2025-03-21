@@ -39,7 +39,7 @@ const Navbar = () => {
 
             <NavigationMenuItem>
               <Link
-                to="/about"
+                to="/dashboard/clothing"
                 className="text-sm font-medium hover:text-primary"
               >
                 CLOTHINGS
@@ -48,7 +48,7 @@ const Navbar = () => {
 
             <NavigationMenuItem>
               <Link
-                to="/docs"
+                to="/dashboard/accessories"
                 className="text-sm font-medium hover:text-primary"
               >
                 ACCESSORIES

@@ -79,7 +79,7 @@ const Login = () => {
           </Form>
         </CardContent>
       </Card>
-      <div className="text-balance text-center text-sm text-muted-foreground  mt-2 [&_a]:inherite  [&_a]:hover:text-primary">
+      <div className="text-balance text-center text-sm text-muted-foreground  mt-2  [&_a]:text-blue-500">
         If you don't have an account? <a href="/">Signup</a>
       </div>
     </div>

@@ -3,6 +3,8 @@ import { SignUpForm } from "./pages/SignUpForm";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Layout from "./pages/Layout";
+import Clothing from "./pages/Clothing";
+import Accessories from "./pages/Accessories";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
       {
         index: true,
         Component: Dashboard,
+      },
+      {
+        path: "clothing",
+        Component: Clothing,
+      },
+      {
+        path: "accessories",
+        Component: Accessories,
       },
     ],
   },
