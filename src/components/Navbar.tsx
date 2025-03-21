@@ -11,7 +11,7 @@ import { useAuthStore } from "@/stores/auth";
 
 const Navbar = () => {
   const { count } = useStore((state) => state);
-  const logout = useAuthStore((state) => state.removeProfileData);
+  const logout = useAuthStore((state) => state.removeUserData);
   const navigate = useNavigate();
 
   const handleClickLogout = () => {
@@ -19,7 +19,7 @@ const Navbar = () => {
     navigate("/");
   };
   return (
-    <nav className="bg-background items-center border-2">
+    <nav className="bg-background items-center border-2 w-full">
       <div className="flex items-center justify-between p-4 w-[1280px] m-auto">
         <Link to="/dashboard" className="text-xl font-bold text-primary">
           WEB-APP

@@ -17,7 +17,7 @@ import { useAuthStore } from "@/stores/auth";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { profileData } = useAuthStore((state) => state);
+  const { profileData, addUserLogin } = useAuthStore((state) => state);
 
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
@@ -34,6 +34,7 @@ const Login = () => {
       data.email === profileData?.email &&
       data.password === profileData?.password
     ) {
+      addUserLogin(data);
       navigate("/dashboard");
     } else {
       form.setError("email", {
@@ -48,7 +49,7 @@ const Login = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center w-full">
+    <div className="flex flex-col items-center justify-center w-full h-full">
       <Card className="w-xl">
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>

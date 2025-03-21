@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Layout from "./pages/Layout";
 import Clothing from "./pages/Clothing";
 import Accessories from "./pages/Accessories";
+import ProtectedRoute from "./components/ProtectedRoutes";
 
 const router = createBrowserRouter([
   {
@@ -17,19 +18,25 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    Component: Layout,
+    Component: ProtectedRoute,
     children: [
       {
-        index: true,
-        Component: Dashboard,
-      },
-      {
-        path: "clothing",
-        Component: Clothing,
-      },
-      {
-        path: "accessories",
-        Component: Accessories,
+        path: "",
+        Component: Layout,
+        children: [
+          {
+            index: true,
+            Component: Dashboard,
+          },
+          {
+            path: "clothing",
+            Component: Clothing,
+          },
+          {
+            path: "accessories",
+            Component: Accessories,
+          },
+        ],
       },
     ],
   },

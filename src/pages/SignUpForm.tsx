@@ -21,7 +21,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Eform } from "@/types/type";
-import { memo, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { CustomFormField } from "@/components/CustomFormField";
 import { FormSchema } from "@/schema/FormSchema";
 import {
@@ -33,17 +33,40 @@ import {
 import { useNavigate } from "react-router";
 import { useAuthStore } from "@/stores/auth";
 
+const data = [
+  { id: 1, title: "Indivisual", value: Eform.indivisual },
+  { id: 2, title: "Enterprise", value: Eform.enterprise },
+  { id: 3, title: "Government", value: Eform.government },
+];
+
 export function SignUpForm() {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
 
   const { addProfileData } = useAuthStore((state) => state);
 
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      type: undefined,
+      firstName: "",
+      lastName: "",
+      address: "",
+      city: "",
+      country: "",
+      countryCode: "",
+      email: "",
+      fax: "",
+      password: "",
+      mobile: "",
+      confirmPassword: "",
+      phone: "",
+      pincode: "",
+      state: "",
+    },
   });
-
-  const navigate = useNavigate();
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     toast("You submitted the following names:", {
@@ -88,9 +111,23 @@ export function SignUpForm() {
                         {capitalize(Eform.government)}/
                         {capitalize(Eform.indivisual)} *
                       </FormLabel>
-                      <FormControl>
-                        <RadioButton field={field} />
-                      </FormControl>
+                      <RadioGroup
+                        defaultValue={field.value}
+                        onValueChange={(e) => {
+                          console.log(e);
+                          field.onChange(e);
+                        }}
+                        className="flex flex-row py-0.5 justify-around w-full"
+                      >
+                        {data.map((e) => (
+                          <FormItem key={e.id} className="flex items-center">
+                            <FormControl>
+                              <RadioGroupItem value={e.value} />
+                            </FormControl>
+                            <FormLabel>{e.title}</FormLabel>
+                          </FormItem>
+                        ))}
+                      </RadioGroup>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -245,27 +282,9 @@ export function SignUpForm() {
   );
 }
 
-const RadioButton = memo((field: any) => {
-  const data = [
-    { id: 1, title: "Indivisual", value: Eform.indivisual },
-    { id: 2, title: "Enterprise", value: Eform.enterprise },
-    { id: 3, title: "Government", value: Eform.government },
-  ];
+// const RadioButton = memo((formControl: Control<T>) => {
 
-  return (
-    <RadioGroup
-      value={field.value}
-      onValueChange={field.onChange}
-      className="flex flex-row py-0.5 justify-around w-full"
-    >
-      {data.map((e) => (
-        <FormItem key={e.id} className="flex items-center">
-          <FormControl>
-            <RadioGroupItem value={e.value} />
-          </FormControl>
-          <FormLabel>{e.title}</FormLabel>
-        </FormItem>
-      ))}
-    </RadioGroup>
-  );
-});
+//   return (
+
+//   );
+// });
