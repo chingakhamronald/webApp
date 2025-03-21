@@ -41,23 +41,6 @@ export function SignUpForm() {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      type: Eform.enterprise,
-      firstName: "",
-      lastName: "",
-      email: "",
-      address: "",
-      country: "",
-      state: "",
-      city: "",
-      pincode: "",
-      countryCode: "",
-      mobile: "",
-      fax: "",
-      phone: "",
-      password: "",
-      confirmPassword: "",
-    },
   });
 
   const navigate = useNavigate();

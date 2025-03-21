@@ -4,7 +4,7 @@ import { z } from "zod";
 export const FormSchema = z
   .object({
     type: z.enum([Eform.enterprise, Eform.government, Eform.indivisual], {
-      required_error: "You need to select a notification type.",
+      required_error: "You need to select a type.",
     }),
 
     firstName: z
@@ -51,7 +51,10 @@ export const FormSchema = z
     }),
 
     pincode: z
-      .string()
+      .string({
+        required_error: "Pincode is required",
+        invalid_type_error: "Pincode must be a string",
+      })
       .regex(/^\d{4,10}$/, { message: "Invalid pincode format" }),
 
     countryCode: z.string({
