@@ -16,7 +16,7 @@ const Navbar = () => {
 
   const handleClickLogout = () => {
     logout();
-    navigate("/");
+    navigate("/login");
   };
   return (
     <nav className="bg-background items-center border-2 w-full">
