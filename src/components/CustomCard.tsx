@@ -1,7 +1,7 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { ICustomCard } from "@/types/type";
 import { Minus, Plus, Star } from "lucide-react";
-import { FC, useState } from "react";
+import { FC, memo, useCallback, useState } from "react";
 import { Button } from "./ui/button";
 import { useStore } from "@/stores";
 
@@ -9,35 +9,40 @@ const CustomCard: FC<{ data: ICustomCard[] }> = ({ data }) => {
   const [cartItems, setCartItems] = useState<{ [key: number]: number }>({});
   const { addCount, removeCount } = useStore((state) => state);
 
-  const handleAddtoCart = (id: number) => {
-    console.log([id]);
-    setCartItems((prev) => {
-      console.log({ "prev...": (prev[id] || 0) + 1 });
-      return {
+  const handleAddtoCart = useCallback(
+    (id: number) => {
+      setCartItems((prev) => ({
         ...prev,
-        [id]: (prev[id] || 0) + 1, // add one item to cart
-      };
-    });
-    addCount();
-  };
+        [id]: (prev[id] || 0) + 1,
+      }));
+      addCount();
+    },
+    [addCount]
+  );
 
-  const handleIncrease = (id: number) => {
-    setCartItems((prev) => ({ ...prev, [id]: prev[id] + 1 }));
-    addCount();
-  };
+  const handleIncrease = useCallback(
+    (id: number) => {
+      setCartItems((prev) => ({ ...prev, [id]: prev[id] + 1 }));
+      addCount();
+    },
+    [addCount]
+  );
 
-  const handleDecrease = (id: number) => {
-    setCartItems((prev) => {
-      const newCount = prev[id] - 1;
-      if (newCount === 0) {
-        const updatedCart = { ...prev };
-        delete updatedCart[id];
-        return updatedCart;
-      }
-      return { ...prev, [id]: newCount };
-    });
-    removeCount();
-  };
+  const handleDecrease = useCallback(
+    (id: number) => {
+      setCartItems((prev) => {
+        const newCount = prev[id] - 1;
+        if (newCount === 0) {
+          const updatedCart = { ...prev };
+          delete updatedCart[id];
+          return updatedCart;
+        }
+        return { ...prev, [id]: newCount };
+      });
+      removeCount();
+    },
+    [removeCount]
+  );
 
   return (
     <div className="flex flex-wrap gap-8 justify-center">
@@ -101,4 +106,4 @@ const CustomCard: FC<{ data: ICustomCard[] }> = ({ data }) => {
   );
 };
 
-export default CustomCard;
+export default memo(CustomCard);
